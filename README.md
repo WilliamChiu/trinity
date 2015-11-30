@@ -8,7 +8,7 @@ Make sure you have python, pip, and brew.
 
 ### Unix / Macintosh
 
-For the time being:
+For the time being, try:
 ```
 brew install npm
 npm install phantom phantomjs -g
