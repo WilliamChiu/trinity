@@ -218,7 +218,7 @@ if config.get('Settings', 'downloadpath') == "":
     with open(settingspath, 'w') as configfile:
         config.write(configfile)
     config.read(settingspath)
-downloadpath = config.get('Settings', 'downloadpath') + "/"
+downloadpath = os.path.abspath(config.get('Settings', 'downloadpath')) + "/"
 
 finished = False #Global
 
