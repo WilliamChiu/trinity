@@ -12,5 +12,5 @@ For the time being:
 ```
 brew install npm
 npm install phantom phantomjs -g
-pip install oops
+pip install https://github.com/WilliamChiu/trinity/zipball/master
 ```
