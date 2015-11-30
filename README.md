@@ -8,7 +8,7 @@ Make sure you have python, pip, and brew.
 
 ### Unix / Macintosh
 
-'
+Run '
 brew install npm
 npm install phantom phantomjs -g
 pip install oops
