@@ -8,8 +8,9 @@ Make sure you have python, pip, and brew.
 
 ### Unix / Macintosh
 
-Run `
+For the time being:
+```
 brew install npm
 npm install phantom phantomjs -g
 pip install oops
-`
+```
