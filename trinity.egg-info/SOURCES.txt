@@ -1,0 +1,7 @@
+setup.py
+scripts/trinity
+trinity.egg-info/PKG-INFO
+trinity.egg-info/SOURCES.txt
+trinity.egg-info/dependency_links.txt
+trinity.egg-info/requires.txt
+trinity.egg-info/top_level.txt

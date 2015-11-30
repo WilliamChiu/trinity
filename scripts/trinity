@@ -1,0 +1,236 @@
+#!/usr/bin/env python
+
+from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+import getpass
+import sys
+import time
+import itertools
+import threading
+import urllib2
+import cookiejar
+import cookielib
+import pickle
+import configparser
+import argparse
+
+def loading():
+    for c in itertools.cycle('/-\|'):
+        if finished:
+            sys.stdout.write('\r ')
+            sys.stdout.flush()
+            break;
+        sys.stdout.write('\r' + c)
+        sys.stdout.flush()
+        time.sleep(0.1)
+
+def downloadfile(url):
+    all_cookies = driver.get_cookies()
+    cp = urllib2.HTTPCookieProcessor()
+    cj = cp.cookiejar
+    for s_cookie in all_cookies:
+        cj.set_cookie(
+            cookielib.Cookie(
+                version=0
+                , name=s_cookie['name']
+                , value=s_cookie['value']
+                , port='80'
+                , port_specified=False
+                , domain=s_cookie['domain']
+                , domain_specified=True
+                , domain_initial_dot=False
+                , path=s_cookie['path']
+                , path_specified=True
+                , secure=s_cookie['secure']
+                , expires=None
+                , discard=False
+                , comment=None
+                , comment_url=None
+                , rest=None
+                , rfc2109=False
+            )
+        )
+    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+    urllib2.install_opener(opener)
+
+    url = url[0:url.index('?')]
+
+    file_name = url.split('/')[-1]
+    u = urllib2.urlopen(url)
+    f = open(downloadpath + file_name, 'wb')
+    print "Saving to " + downloadpath + file_name
+    meta = u.info()
+    file_size = int(meta.getheaders("Content-Length")[0])
+    print "Downloading: %s Bytes: %s" % (file_name, file_size)
+
+    file_size_dl = 0
+    block_sz = 8192
+    while True:
+        buffer = u.read(block_sz)
+        if not buffer:
+            break
+
+        file_size_dl += len(buffer)
+        f.write(buffer)
+        status = r"%10d  [%3.2f%%]" % (file_size_dl, file_size_dl * 100. / file_size)
+        status = status + chr(8)*(len(status)+1)
+        print status,
+
+    print
+    f.close()
+
+def login():
+    #is it finished?
+    global finished
+    finished = False
+
+    #Swanky loading animation
+    a = threading.Thread(target=loading)
+    a.start()
+    driver.get("https://trinityschoolnyc.myschoolapp.com/app#login")
+
+    #Fill out form
+    driver.find_element_by_id("Username").send_keys(username)
+    driver.find_element_by_id("Password").send_keys(password)
+    driver.find_element_by_id("loginBtn").click()
+
+    #Stop animation
+    finished = True
+    time.sleep(0.1)
+
+def gotohomeworkpage():
+    driver.get("https://trinityschoolnyc.myschoolapp.com/app/student#studentmyday/assignment-center")
+
+def homeworkpage():
+    #is it finished?
+    global finished
+    finished = False
+
+    #Swanky loading animation
+    a = threading.Thread(target=loading)
+    a.start()
+
+    #Click active assignments
+    if driver.find_element_by_xpath("//button[@data-filter='2']/i").get_attribute('class') == "p3icon-radioOff": 
+        driver.find_element_by_xpath("//button[@data-filter='2']").click()
+
+    #Stop the spinnies
+    finished = True
+    time.sleep(0.1)
+
+    #Get assignments
+    homeworklist = driver.find_element_by_id("assignment-center-assignment-items").find_element_by_xpath(".//td[@data-heading='Class']")
+
+    #Implicit wait, then update homeworklist
+    homeworklist = driver.find_element_by_id("assignment-center-assignment-items").find_elements_by_xpath(".//td")
+    homeworklistlinks = driver.find_element_by_id("assignment-center-assignment-items").find_elements_by_xpath(".//td/a")
+    homeworklistlinkscounter = 0
+
+    driver.implicitly_wait(0)
+
+    #Parse
+    for homework in homeworklist:
+        if homework.get_attribute('data-heading') == "Class":
+            print
+            print homework.text
+        elif homework.get_attribute('data-heading') == "Details":
+            if len(homework.find_elements_by_xpath(".//a")) > 0:
+                print '(' + str(homeworklistlinkscounter) + ')'
+                homeworklistlinkscounter += 1
+            print homework.text.replace("                    ","").replace("                                            ","")
+        elif homework.get_attribute('data-heading') == "Assign":
+            print "Assigned: " + homework.text
+        elif homework.get_attribute('data-heading') == "Due":
+            print "Due: " + homework.text
+        else:
+            print homework.text.lstrip()
+
+    driver.implicitly_wait(20)
+
+    print
+
+    input = ""
+    while True:
+        input = raw_input('# to go to respective description. [q] to quit: ')
+        if input.isdigit() and int(input) < homeworklistlinkscounter and int(input) >= 0:
+            input = homeworklistlinks[int(input)].get_attribute('href')
+            break
+        elif input == 'q':
+            break
+
+    return input
+
+def gotodescriptionpage( url ):
+    driver.get(url)
+    if "#assignmentdetail" in url:
+        linkedcontent = driver.find_element_by_id('assignment-detail-linked-content')
+        if not driver.find_element_by_id('assignment-detail-assignment').find_element_by_xpath(".//div/span").text == "":
+            print "\n" + driver.find_element_by_id('assignment-detail-assignment').find_element_by_xpath(".//div/span").text
+        print
+        driver.implicitly_wait(0)
+        linkedcontent = driver.find_element_by_id('assignment-detail-linked-content') # please dont ask me why I dont know..
+        if len(linkedcontent.find_elements_by_xpath(".//a")) > 0:
+            input = ""
+            while True:
+                input = raw_input( "Download(s) found! [d] to download. [q] to skip: ")
+                if input == 'd':
+                    for link in linkedcontent.find_elements_by_xpath(".//a"):
+                        downloadfile(link.get_attribute('href'))
+                    break
+                elif input == 'q':
+                    break
+        driver.implicitly_wait(20)
+
+    input = ""
+    while True:
+        input = raw_input('[b] to go back. [q] to quit: ')
+        if input == 'b':
+            break
+        elif input == 'q':
+            break
+
+    return input
+
+def loop(): #Forgive me Python for I have sinned
+    homeworkpageresult = homeworkpage()
+    if not homeworkpageresult == "q":
+        if gotodescriptionpage(homeworkpageresult) == 'b':
+            gotohomeworkpage()
+            loop()
+
+config = configparser.ConfigParser()
+config.read('settings.ini')
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--path", help="Set path to download folder")
+args = parser.parse_args()
+if args.path:
+    config.set('Settings', 'downloadpath', args.path)
+    with open('settings.ini', 'w') as configfile:
+        config.write(configfile)
+
+if config.get('Settings', 'downloadpath') == "":
+    inputtedpath = raw_input('Trinity offers attached downloads for assignments. Path to download folder? : ')
+    config.set('Settings', 'downloadpath', inputtedpath)
+    with open('settings.ini', 'w') as configfile:
+        config.write(configfile)
+    config.read('settings.ini')
+downloadpath = config.get('Settings', 'downloadpath') + "/"
+
+finished = False #Global
+
+#User inputs
+username = raw_input('Username: ')
+password = getpass.getpass(prompt='Password: ')
+
+#Browser settings
+DesiredCapabilities.PHANTOMJS['phantomjs.page.settings.userAgent'] = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'
+driver = webdriver.PhantomJS()
+driver.set_window_size(1400,1000)
+driver.implicitly_wait(20)
+
+login()
+loop()
+
+driver.close()
+sys.exit()
