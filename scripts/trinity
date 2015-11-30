@@ -13,6 +13,7 @@ import cookielib
 import pickle
 import configparser
 import argparse
+import os
 
 def loading():
     for c in itertools.cycle('/-\|'):
@@ -198,23 +199,25 @@ def loop(): #Forgive me Python for I have sinned
             gotohomeworkpage()
             loop()
 
+settingspath = os.path.join(os.path.dirname( __file__ ), '..', 'settings', 'settings.ini')
+
 config = configparser.ConfigParser()
-config.read('settings.ini')
+config.read(settingspath)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--path", help="Set path to download folder")
 args = parser.parse_args()
 if args.path:
     config.set('Settings', 'downloadpath', args.path)
-    with open('settings.ini', 'w') as configfile:
+    with open(settingspath, 'w') as configfile:
         config.write(configfile)
 
 if config.get('Settings', 'downloadpath') == "":
     inputtedpath = raw_input('Trinity offers attached downloads for assignments. Path to download folder? : ')
     config.set('Settings', 'downloadpath', inputtedpath)
-    with open('settings.ini', 'w') as configfile:
+    with open(settingspath, 'w') as configfile:
         config.write(configfile)
-    config.read('settings.ini')
+    config.read(settingspath)
 downloadpath = config.get('Settings', 'downloadpath') + "/"
 
 finished = False #Global

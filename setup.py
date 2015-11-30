@@ -10,6 +10,9 @@ setup(
     scripts = [
         'scripts/trinity'
     ],
+    data_files = [
+        ('settings', ['settings.ini'])
+    ],
     install_requires = [
         'selenium',
         'cookiejar'
