@@ -11,7 +11,7 @@ setup(
         'scripts/trinity'
     ],
     data_files = [
-        ('settings', ['settings.ini'])
+        ('settings', ['settings/settings.ini'])
     ],
     install_requires = [
         'selenium',
