@@ -22,5 +22,5 @@ PhantomJS is launching GhostDriver...
 [INFO  - 2015-11-30T11:39:14.640Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
 [INFO  - 2015-11-30T11:44:14.640Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
 [INFO  - 2015-11-30T11:49:14.642Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
-[INFO  - 2015-11-30T11:44:19.323Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2015-11-30T11:54:14.642Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
 [INFO  - 2015-11-30T11:49:19.323Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
