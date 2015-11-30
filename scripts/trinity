@@ -213,12 +213,10 @@ if args.path:
         config.write(configfile)
 
 if config.get('Settings', 'downloadpath') == "":
-    inputtedpath = raw_input('Trinity offers attached downloads for assignments. Path to download folder? : ')
-    config.set('Settings', 'downloadpath', inputtedpath)
-    with open(settingspath, 'w') as configfile:
-        config.write(configfile)
-    config.read(settingspath)
-downloadpath = os.path.abspath(config.get('Settings', 'downloadpath')) + "/"
+    inputtedpath = raw_input('Trinity offers attached downloads for assignments. Please run \'trinity --path PATH\'')
+    driver.close()
+    sys.exit()
+downloadpath = config.get('Settings', 'downloadpath') + "/"
 
 finished = False #Global
 
