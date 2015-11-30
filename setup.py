@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='trinity',
-    version='0.62',
+    version='0.6.0-beta.1',
     description='Prints out assignments from trinityschoolnyc.org',
     url='https://github.com/WilliamChiu/trinity',
     author='William Chiu',

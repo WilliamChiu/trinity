@@ -225,7 +225,7 @@ password = getpass.getpass(prompt='Password: ')
 
 #Browser settings
 DesiredCapabilities.PHANTOMJS['phantomjs.page.settings.userAgent'] = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1'
-driver = webdriver.PhantomJS()
+driver = webdriver.PhantomJS(service_args=["--webdriver-loglevel=ERROR"])
 driver.set_window_size(1400,1000)
 driver.implicitly_wait(20)
 
