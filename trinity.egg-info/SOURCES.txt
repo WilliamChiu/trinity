@@ -1,5 +1,9 @@
+.DS_Store
+MANIFEST.in
+README.md
 setup.py
 scripts/trinity
+settings/settings.ini
 trinity.egg-info/PKG-INFO
 trinity.egg-info/SOURCES.txt
 trinity.egg-info/dependency_links.txt

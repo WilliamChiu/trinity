@@ -1,6 +1,6 @@
-from setuptools import setup
+import setuptools
 
-setup(
+setuptools.setup(
     name='trinity',
     version='0.1.0',
     description='Prints out assignments from trinityschoolnyc.org',
@@ -10,9 +10,10 @@ setup(
     scripts = [
         'scripts/trinity'
     ],
-    data_files = [
-        ('settings', ['settings/settings.ini'])
-    ],
+    packages=setuptools.find_packages(),
+    package_data = {
+        'trinity': ['settings.ini', 'settings/settings.ini']
+    },
     install_requires = [
         'selenium',
         'cookiejar'
