@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='trinity',
-    version='0.2.1',
+    version='0.2.2',
     description='Prints out assignments from trinityschoolnyc.org',
     url='https://github.com/WilliamChiu/trinity',
     author='William Chiu',
@@ -11,10 +11,10 @@ setup(
         'scripts/trinity'
     ],
     packages = {
-        'settings'
+        'trinity-settings'
     },
     data_files = [
-        ('settings', ['settings/settings.ini'])
+        ('trinity-settings', ['trinity-settings/settings.ini'])
     ],
     install_requires = [
         'selenium',
