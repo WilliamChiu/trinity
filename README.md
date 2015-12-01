@@ -12,5 +12,5 @@ For the time being, try:
 ```
 brew install npm
 npm install phantom phantomjs -g
-pip install https://github.com/WilliamChiu/trinity/zipball/master
+pip install https://github.com/WilliamChiu/trinity/raw/master/dist/trinity-latest.tar.gz
 ```
