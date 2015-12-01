@@ -214,7 +214,7 @@ if args.path:
 
 if config.get('Settings', 'downloadpath') == "":
     print 'Trinity offers attached downloads for assignments. Please run \'trinity --path PATH\''
-    os.system("pip install https://github.com/WilliamChiu/trinity/raw/master/dist/trinity-latest.zip")
+    os.system("pip install https://github.com/WilliamChiu/trinity/raw/master/dist/trinity-latest.tar.gz")
     sys.exit()
 downloadpath = config.get('Settings', 'downloadpath') + "/"
 
@@ -234,5 +234,5 @@ login()
 loop()
 
 driver.close()
-os.system("pip install https://github.com/WilliamChiu/trinity/raw/master/dist/trinity-latest.zip")
+os.system("pip install https://github.com/WilliamChiu/trinity/raw/master/dist/trinity-latest.tar.gz")
 sys.exit()
